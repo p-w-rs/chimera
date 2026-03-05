@@ -8,7 +8,7 @@
 #   ./mount /dev/sda        (SATA/SCSI)
 #   ./mount /dev/nvme0n1    (NVMe)
 
-source (dirname (status filename))/helpers/die
+source (dirname (status filename))/helpers/die.fish
 
 test (count $argv) -eq 1; or die "Usage: "(status filename)" <device>"
 set DEV $argv[1]

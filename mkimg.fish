@@ -7,8 +7,8 @@
 # To adjust image or partition sizes, edit the variables below.
 # After this script: run install-pkgs, then run-chroot.
 
-source (dirname (status filename))/helpers/die
-set CALC (dirname (status filename))/helpers/mbcalc
+source (dirname (status filename))/helpers/die.fish
+set CALC (dirname (status filename))/helpers/mbcalc.fish
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 set IMG_FILE  linux.img
