@@ -1,0 +1,3 @@
+doas apk add gcc clang clang-devel lld llvm llvm-devel gcompat patchelf \
+    linux-lts linux-lts-devel linux-headers gmake git wget \
+    firmware-linux-nvidia strace gdb

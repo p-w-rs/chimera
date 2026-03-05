@@ -1,0 +1,16 @@
+#!/usr/bin/env fish
+
+# Converts a human size (e.g. 100M, 4G, 512K) to a plain megabyte number.
+# Usage: mbcalc <size>
+
+test (count $argv) -eq 1; or begin; echo "Usage: size-mb <size>  (e.g. 100M, 4G, 512K)"; exit 1; end
+
+set num  (string replace -r '[KMGkmg]$' '' $argv[1])
+set unit (string upper (string match -r '[KMGkmg]$' $argv[1]))
+
+switch $unit
+    case K;  math "ceil($num / 1024)"
+    case M;  math "$num"
+    case G;  math "$num * 1024"
+    case '*'; echo "Error: unrecognised unit '$unit' — use K, M, or G" >&2; exit 1
+end

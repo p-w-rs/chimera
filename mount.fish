@@ -1,0 +1,31 @@
+#!/usr/bin/env fish
+
+# mount-disk — mount a partitioned Void Linux disk under /mnt.
+# Mounts root → /mnt, EFI → /mnt/boot/efi, and enables swap.
+#
+# Usage: ./mount <device>
+#   ./mount /dev/loop0      (disk image)
+#   ./mount /dev/sda        (SATA/SCSI)
+#   ./mount /dev/nvme0n1    (NVMe)
+
+source (dirname (status filename))/helpers/die
+
+test (count $argv) -eq 1; or die "Usage: "(status filename)" <device>"
+set DEV $argv[1]
+
+# NVMe/loop devices use 'p' before the partition number
+if string match -qr '(nvme|loop)' $DEV
+    set P {$DEV}p
+else
+    set P $DEV
+end
+
+echo "Mounting $DEV → /mnt..."
+run sudo mount      {$P}3 /mnt
+run sudo mkdir -p   /mnt/boot/efi
+run sudo mount      {$P}1 /mnt/boot/efi
+run sudo swapon     {$P}2
+
+echo ""
+echo "Mounted. To unmount when finished:"
+echo "  sudo swapoff {$P}2 && sudo umount /mnt/boot/efi && sudo umount /mnt"
