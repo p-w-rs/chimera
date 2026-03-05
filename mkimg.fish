@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-# mkimg — create and partition a raw disk image for Linux.
+# mkimg.fish — create and partition a raw disk image for Linux.
 # Attaches a loop device, writes GPT (EFI + swap + root), formats all three.
 # Output: void.img attached at a loop device (printed at the end).
 #
@@ -29,14 +29,14 @@ echo "Creating $IMG_SIZE disk image: $IMG_FILE..."
 run truncate -s $IMG_SIZE $IMG_FILE
 
 echo "Attaching loop device..."
-set LOOP (sudo losetup --find --partscan --show $IMG_FILE)
+set LOOP (doas losetup --find --partscan --show $IMG_FILE)
 or die "losetup failed"
 echo "Loop device: $LOOP"
 
 # ── Partition and format ───────────────────────────────────────────────────────
 # Layout: 1M gap | EFI (FAT32) | swap | root (ext4, rest of disk)
 echo "Partitioning $LOOP..."
-run sudo parted --script $LOOP \
+run doas parted --script $LOOP \
     mklabel gpt \
     mkpart EFI  fat32      $EFI_START $EFI_END  \
     mkpart swap linux-swap $EFI_END   $SWAP_END \
@@ -46,10 +46,10 @@ run sudo parted --script $LOOP \
 sleep 1
 
 echo "Formatting partitions..."
-run sudo mkfs.vfat -F32 -n EFI  {$LOOP}p1
-run sudo mkswap    -L   swap    {$LOOP}p2
-run sudo mkfs.ext4 -L   root    {$LOOP}p3
+run doas mkfs.vfat -F32 -n EFI  {$LOOP}p1
+run doas mkswap    -L   swap    {$LOOP}p2
+run doas mkfs.ext4 -L   root    {$LOOP}p3
 
 echo ""
 echo "Done. Loop device: $LOOP"
-echo "Detach when finished: sudo losetup -d $LOOP"
+echo "Detach when finished: doas losetup -d $LOOP"

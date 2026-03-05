@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # Converts a human size (e.g. 100M, 4G, 512K) to a plain megabyte number.
-# Usage: mbcalc <size>
+# Usage: mbcalc.fish <size>
 
 test (count $argv) -eq 1; or begin; echo "Usage: size-mb <size>  (e.g. 100M, 4G, 512K)"; exit 1; end
 

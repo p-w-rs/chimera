@@ -1,12 +1,12 @@
 #!/usr/bin/env fish
 
-# mount-disk — mount a partitioned Void Linux disk under /mnt.
+# mount.fish — mount a partitioned Void Linux disk under /mnt.
 # Mounts root → /mnt, EFI → /mnt/boot/efi, and enables swap.
 #
-# Usage: ./mount <device>
-#   ./mount /dev/loop0      (disk image)
-#   ./mount /dev/sda        (SATA/SCSI)
-#   ./mount /dev/nvme0n1    (NVMe)
+# Usage: ./mount.fish <device>
+#   ./mount.fish /dev/loop0      (disk image)
+#   ./mount.fish /dev/sda        (SATA/SCSI)
+#   ./mount.fish /dev/nvme0n1    (NVMe)
 
 source (dirname (status filename))/helpers/die.fish
 
@@ -21,11 +21,11 @@ else
 end
 
 echo "Mounting $DEV → /mnt..."
-run sudo mount      {$P}3 /mnt
-run sudo mkdir -p   /mnt/boot/efi
-run sudo mount      {$P}1 /mnt/boot/efi
-run sudo swapon     {$P}2
+run doas mount      {$P}3 /mnt
+run doas mkdir -p   /mnt/boot/efi
+run doas mount      {$P}1 /mnt/boot/efi
+run doas swapon     {$P}2
 
 echo ""
 echo "Mounted. To unmount when finished:"
-echo "  sudo swapoff {$P}2 && sudo umount /mnt/boot/efi && sudo umount /mnt"
+echo "  doas swapoff {$P}2 && doas umount /mnt/boot/efi && doas umount /mnt"
